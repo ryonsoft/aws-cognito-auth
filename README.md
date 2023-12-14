@@ -127,6 +127,7 @@ Click on <b>View Hosted UI</b> button
 </p>
 
 <em>If necessary, clean you web browser cache.</em>
+
 <em>P.S.: You can assign the user to a group appropriately using AWS Lambda.</em>
 
 
