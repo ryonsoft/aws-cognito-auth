@@ -72,7 +72,7 @@ spring.security.oauth2.client.provider.cognito.issuerUri=https://cognito-idp.{yo
   <img src="https://i.imgur.com/UP17y4Z.png" width="400" alt="Cognito domain prefix Image" />
 </p>
 
-<p><center>URL: <b>http://localhost:8080/login/oauth2/code/cognito</b></center></p>
+<p><center>URL: http://localhost:8080/login/oauth2/code/cognito</center></p>
 
 
 <p align="center">
