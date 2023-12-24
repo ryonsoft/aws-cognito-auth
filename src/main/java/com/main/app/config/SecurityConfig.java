@@ -18,43 +18,44 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
-public class SecurityConfig  {
-	
-	
+public class SecurityConfig {
+
 	@Bean
 	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-		
+
 		http
-			.csrf(csrf -> csrf
-				.disable())	
-			.authorizeHttpRequests(
-				auth -> auth
-					.requestMatchers("/error", "/webjars/**", "/resources/**").permitAll()
-					.requestMatchers("/").hasAnyRole("ADMIN", "USER")
-					.anyRequest().authenticated())
-			.oauth2Login(Customizer.withDefaults())
-			.logout(logout -> logout.logoutSuccessUrl("/"));
-			
-		return http.build();		
+				.csrf(csrf -> csrf
+						.disable())
+				.authorizeHttpRequests(
+						auth -> auth
+								.requestMatchers("/error", "/webjars/**", "/resources/**", "/home", "/oauth2/authorize")
+								.permitAll()
+								.requestMatchers("/").hasAnyRole("ADMIN", "USER")
+								.anyRequest().authenticated())
+				.oauth2Login(Customizer.withDefaults())
+				.logout(logout -> logout.logoutSuccessUrl("/"));
+
+		return http.build();
 	}
-	
+
 	@Bean
-    GrantedAuthoritiesMapper userAuthoritiesMapper() {
-        return (authorities) -> {
-            Set<GrantedAuthority> mappedAuthorities = new HashSet<>();
+	GrantedAuthoritiesMapper userAuthoritiesMapper() {
+		return (authorities) -> {
+			Set<GrantedAuthority> mappedAuthorities = new HashSet<>();
 
-            try {
-                OidcUserAuthority oidcUserAuthority = (OidcUserAuthority) new ArrayList<>(authorities).get(0);
+			try {
+				OidcUserAuthority oidcUserAuthority = (OidcUserAuthority) new ArrayList<>(authorities).get(0);
 
-                mappedAuthorities = ((ArrayList<?>) oidcUserAuthority.getAttributes().get("cognito:groups")).stream().map(role -> new SimpleGrantedAuthority("ROLE_" + role)).collect(Collectors.toSet());
-            } catch (Exception exception) {
-                System.out.println("Not Authorized!");
+				mappedAuthorities = ((ArrayList<?>) oidcUserAuthority.getAttributes().get("cognito:groups")).stream()
+						.map(role -> new SimpleGrantedAuthority("ROLE_" + role)).collect(Collectors.toSet());
+			} catch (Exception exception) {
+				System.out.println("Not Authorized!");
 
-                System.out.println(exception.getMessage());
-            }
+				System.out.println(exception.getMessage());
+			}
 
-            return mappedAuthorities;
-        };
-    }
+			return mappedAuthorities;
+		};
+	}
 
 }
